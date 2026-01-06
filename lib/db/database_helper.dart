@@ -45,8 +45,12 @@ class DatabaseHelper {
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
-          await db.execute('ALTER TABLE tasks ADD COLUMN isCompleted INTEGER DEFAULT 0');
-          await db.execute('ALTER TABLE tasks ADD COLUMN priority INTEGER DEFAULT 1');
+          await db.execute(
+            'ALTER TABLE tasks ADD COLUMN isCompleted INTEGER DEFAULT 0',
+          );
+          await db.execute(
+            'ALTER TABLE tasks ADD COLUMN priority INTEGER DEFAULT 1',
+          );
         }
         if (oldVersion < 3) {
           await db.execute('''
@@ -88,7 +92,11 @@ class DatabaseHelper {
   Future<int> deleteCategory(int id) async {
     final dbClient = await db;
     // Les tâches associées auront categoryId = NULL
-    return await dbClient.delete('categories', where: 'id = ?', whereArgs: [id]);
+    return await dbClient.delete(
+      'categories',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   // ============ TASKS ============
@@ -103,7 +111,10 @@ class DatabaseHelper {
       );
       return maps.map((e) => Task.fromMap(e)).toList();
     }
-    final maps = await dbClient.query('tasks', orderBy: 'isCompleted ASC, priority DESC, id DESC');
+    final maps = await dbClient.query(
+      'tasks',
+      orderBy: 'isCompleted ASC, priority DESC, id DESC',
+    );
     return maps.map((e) => Task.fromMap(e)).toList();
   }
 

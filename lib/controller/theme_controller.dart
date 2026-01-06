@@ -4,15 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeController extends GetxController {
   static ThemeController get to => Get.find();
-  
+
   final _isDarkMode = false.obs;
   final _primaryColor = const Color(0xFF6366F1).obs;
-  
+
   bool get isDarkMode => _isDarkMode.value;
   Color get primaryColor => _primaryColor.value;
-  
+
   ThemeData get theme => _isDarkMode.value ? darkTheme : lightTheme;
-  
+
   ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -38,7 +38,7 @@ class ThemeController extends GetxController {
       filled: true,
     ),
   );
-  
+
   ThemeData get darkTheme => ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
@@ -60,9 +60,7 @@ class ThemeController extends GetxController {
       color: Colors.grey.shade800,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
-    drawerTheme: DrawerThemeData(
-      backgroundColor: Colors.grey.shade900,
-    ),
+    drawerTheme: DrawerThemeData(backgroundColor: Colors.grey.shade900),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       filled: true,

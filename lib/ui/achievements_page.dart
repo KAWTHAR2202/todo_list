@@ -12,9 +12,7 @@ class AchievementsPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Badges & Récompenses'),
-      ),
+      appBar: AppBar(title: const Text('Badges & Récompenses')),
       body: Column(
         children: [
           // Stats Header
@@ -31,64 +29,71 @@ class AchievementsPage extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
             ),
-            child: Obx(() => Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildStatItem(
-                      icon: Icons.emoji_events,
-                      value: '${controller.unlockedCount}/${controller.totalCount}',
-                      label: 'Badges',
-                    ),
-                    _buildStatItem(
-                      icon: Icons.star,
-                      value: '${controller.totalPoints.value}',
-                      label: 'Points',
-                    ),
-                    _buildStatItem(
-                      icon: Icons.local_fire_department,
-                      value: '${controller.currentStreak.value}',
-                      label: 'Série',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                LinearProgressIndicator(
-                  value: controller.unlockedCount / controller.totalCount,
-                  backgroundColor: Colors.white.withOpacity(0.3),
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                  borderRadius: BorderRadius.circular(10),
-                  minHeight: 8,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${(controller.unlockedCount / controller.totalCount * 100).toStringAsFixed(0)}% complété',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+            child: Obx(
+              () => Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatItem(
+                        icon: Icons.emoji_events,
+                        value:
+                            '${controller.unlockedCount}/${controller.totalCount}',
+                        label: 'Badges',
+                      ),
+                      _buildStatItem(
+                        icon: Icons.star,
+                        value: '${controller.totalPoints.value}',
+                        label: 'Points',
+                      ),
+                      _buildStatItem(
+                        icon: Icons.local_fire_department,
+                        value: '${controller.currentStreak.value}',
+                        label: 'Série',
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            )),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: controller.unlockedCount / controller.totalCount,
+                    backgroundColor: Colors.white.withOpacity(0.3),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    minHeight: 8,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${(controller.unlockedCount / controller.totalCount * 100).toStringAsFixed(0)}% complété',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          
+
           // Achievements Grid
           Expanded(
-            child: Obx(() => GridView.builder(
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.85,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+            child: Obx(
+              () => GridView.builder(
+                padding: const EdgeInsets.all(16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.85,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                ),
+                itemCount: controller.achievements.length,
+                itemBuilder: (context, index) {
+                  final achievement = controller.achievements[index];
+                  return _AchievementCard(achievement: achievement);
+                },
               ),
-              itemCount: controller.achievements.length,
-              itemBuilder: (context, index) {
-                final achievement = controller.achievements[index];
-                return _AchievementCard(achievement: achievement);
-              },
-            )),
+            ),
           ),
         ],
       ),
@@ -114,10 +119,7 @@ class AchievementsPage extends StatelessWidget {
         ),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 12),
         ),
       ],
     );
@@ -132,7 +134,7 @@ class _AchievementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isUnlocked = achievement.isUnlocked;
-    
+
     return Card(
       elevation: isUnlocked ? 4 : 1,
       child: InkWell(
@@ -217,10 +219,7 @@ class _AchievementCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '${achievement.currentValue}/${achievement.targetValue}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                 ),
               ] else
                 Text(
@@ -264,27 +263,19 @@ class _AchievementCard extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               achievement.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               achievement.description,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(color: Colors.grey.shade600),
             ),
             const SizedBox(height: 16),
             if (achievement.isUnlocked && achievement.unlockedAt != null)
               Text(
                 'Débloqué le ${_formatDate(achievement.unlockedAt!)}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: achievement.color,
-                ),
+                style: TextStyle(fontSize: 12, color: achievement.color),
               )
             else
               Column(
@@ -292,16 +283,16 @@ class _AchievementCard extends StatelessWidget {
                   LinearProgressIndicator(
                     value: achievement.progress,
                     backgroundColor: Colors.grey.withOpacity(0.2),
-                    valueColor: AlwaysStoppedAnimation<Color>(achievement.color),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      achievement.color,
+                    ),
                     borderRadius: BorderRadius.circular(10),
                     minHeight: 8,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Progression: ${achievement.currentValue}/${achievement.targetValue}',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade600),
                   ),
                 ],
               ),

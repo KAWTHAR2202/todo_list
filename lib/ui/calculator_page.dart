@@ -90,13 +90,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
       if (result == result.toInt()) {
         _display = result.toInt().toString();
       } else {
-        _display = result.toStringAsFixed(8).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+        _display = result
+            .toStringAsFixed(8)
+            .replaceAll(RegExp(r'0+$'), '')
+            .replaceAll(RegExp(r'\.$'), '');
       }
-      
+
       // Add to history
       _history.insert(0, '$fullExpression = $_display');
       if (_history.length > 10) _history.removeLast();
-      
+
       _expression = '';
       _firstOperand = null;
       _operator = null;
@@ -158,7 +161,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
         if (result == result.toInt()) {
           _display = result.toInt().toString();
         } else {
-          _display = result.toStringAsFixed(8).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+          _display = result
+              .toStringAsFixed(8)
+              .replaceAll(RegExp(r'0+$'), '')
+              .replaceAll(RegExp(r'\.$'), '');
         }
         _shouldResetDisplay = true;
       }
@@ -168,15 +174,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('🧮 Calculator'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: _showHistory,
-          ),
+          IconButton(icon: const Icon(Icons.history), onPressed: _showHistory),
         ],
       ),
       body: SafeArea(
@@ -218,7 +221,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 ),
               ),
             ),
-            
+
             // Buttons
             Expanded(
               flex: 4,
@@ -226,7 +229,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -234,10 +239,28 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     Expanded(
                       child: Row(
                         children: [
-                          _buildButton('C', onTap: _onClearPress, backgroundColor: Colors.red.shade100, textColor: Colors.red),
-                          _buildButton('±', onTap: _onPlusMinusPress, backgroundColor: Colors.grey.shade200),
-                          _buildButton('%', onTap: _onPercentPress, backgroundColor: Colors.grey.shade200),
-                          _buildButton('÷', onTap: () => _onOperatorPress('÷'), backgroundColor: colorScheme.primary, textColor: Colors.white),
+                          _buildButton(
+                            'C',
+                            onTap: _onClearPress,
+                            backgroundColor: Colors.red.shade100,
+                            textColor: Colors.red,
+                          ),
+                          _buildButton(
+                            '±',
+                            onTap: _onPlusMinusPress,
+                            backgroundColor: Colors.grey.shade200,
+                          ),
+                          _buildButton(
+                            '%',
+                            onTap: _onPercentPress,
+                            backgroundColor: Colors.grey.shade200,
+                          ),
+                          _buildButton(
+                            '÷',
+                            onTap: () => _onOperatorPress('÷'),
+                            backgroundColor: colorScheme.primary,
+                            textColor: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -248,7 +271,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _buildButton('7', onTap: () => _onDigitPress('7')),
                           _buildButton('8', onTap: () => _onDigitPress('8')),
                           _buildButton('9', onTap: () => _onDigitPress('9')),
-                          _buildButton('×', onTap: () => _onOperatorPress('×'), backgroundColor: colorScheme.primary, textColor: Colors.white),
+                          _buildButton(
+                            '×',
+                            onTap: () => _onOperatorPress('×'),
+                            backgroundColor: colorScheme.primary,
+                            textColor: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -259,7 +287,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _buildButton('4', onTap: () => _onDigitPress('4')),
                           _buildButton('5', onTap: () => _onDigitPress('5')),
                           _buildButton('6', onTap: () => _onDigitPress('6')),
-                          _buildButton('-', onTap: () => _onOperatorPress('-'), backgroundColor: colorScheme.primary, textColor: Colors.white),
+                          _buildButton(
+                            '-',
+                            onTap: () => _onOperatorPress('-'),
+                            backgroundColor: colorScheme.primary,
+                            textColor: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -270,7 +303,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _buildButton('1', onTap: () => _onDigitPress('1')),
                           _buildButton('2', onTap: () => _onDigitPress('2')),
                           _buildButton('3', onTap: () => _onDigitPress('3')),
-                          _buildButton('+', onTap: () => _onOperatorPress('+'), backgroundColor: colorScheme.primary, textColor: Colors.white),
+                          _buildButton(
+                            '+',
+                            onTap: () => _onOperatorPress('+'),
+                            backgroundColor: colorScheme.primary,
+                            textColor: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -278,10 +316,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     Expanded(
                       child: Row(
                         children: [
-                          _buildButton('√', onTap: _onSquareRootPress, backgroundColor: Colors.grey.shade200),
+                          _buildButton(
+                            '√',
+                            onTap: _onSquareRootPress,
+                            backgroundColor: Colors.grey.shade200,
+                          ),
                           _buildButton('0', onTap: () => _onDigitPress('0')),
                           _buildButton('.', onTap: _onDecimalPress),
-                          _buildButton('=', onTap: _onEqualsPress, backgroundColor: Colors.green, textColor: Colors.white),
+                          _buildButton(
+                            '=',
+                            onTap: _onEqualsPress,
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                          ),
                         ],
                       ),
                     ),
@@ -377,7 +424,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     return ListTile(
                       title: Text(
                         _history[index],
-                        style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 16,
+                        ),
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.copy, size: 20),
@@ -403,7 +453,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   Navigator.pop(context);
                 },
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
-                label: const Text('Clear History', style: TextStyle(color: Colors.red)),
+                label: const Text(
+                  'Clear History',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             const SizedBox(height: 24),
           ],

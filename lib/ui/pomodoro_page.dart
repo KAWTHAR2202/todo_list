@@ -11,7 +11,8 @@ class PomodoroPage extends StatefulWidget {
   State<PomodoroPage> createState() => _PomodoroPageState();
 }
 
-class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMixin {
+class _PomodoroPageState extends State<PomodoroPage>
+    with TickerProviderStateMixin {
   // Timer settings (in minutes)
   int workDuration = 25;
   int shortBreakDuration = 5;
@@ -24,7 +25,7 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
   bool _isRunning = false;
   bool _isWorkSession = true;
   Timer? _timer;
-  
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
@@ -51,7 +52,7 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
   void _startTimer() {
     setState(() => _isRunning = true);
     _pulseController.repeat(reverse: true);
-    
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_remainingSeconds > 0) {
@@ -74,12 +75,15 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
     _pulseController.stop();
     setState(() {
       _isRunning = false;
-      _remainingSeconds = _isWorkSession ? workDuration * 60 : _getBreakDuration() * 60;
+      _remainingSeconds = _isWorkSession
+          ? workDuration * 60
+          : _getBreakDuration() * 60;
     });
   }
 
   int _getBreakDuration() {
-    if (_completedSessions > 0 && _completedSessions % sessionsBeforeLongBreak == 0) {
+    if (_completedSessions > 0 &&
+        _completedSessions % sessionsBeforeLongBreak == 0) {
       return longBreakDuration;
     }
     return shortBreakDuration;
@@ -88,15 +92,15 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
   void _onTimerComplete() {
     _timer?.cancel();
     _pulseController.stop();
-    
+
     if (_isWorkSession) {
       _completedSessions++;
-      
+
       // Track achievement for Pomodoro
       if (Get.isRegistered<AchievementController>()) {
         AchievementController.to.onPomodoroCompleted();
       }
-      
+
       NotificationService.showInstantNotification(
         '🍅 Pomodoro Complete!',
         'Great job! Take a ${_getBreakDuration()} minute break.',
@@ -141,14 +145,18 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
   }
 
   double get _progress {
-    int totalSeconds = _isWorkSession ? workDuration * 60 : _getBreakDuration() * 60;
+    int totalSeconds = _isWorkSession
+        ? workDuration * 60
+        : _getBreakDuration() * 60;
     return 1 - (_remainingSeconds / totalSeconds);
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final primaryColor = _isWorkSession ? Colors.red.shade400 : Colors.green.shade400;
+    final primaryColor = _isWorkSession
+        ? Colors.red.shade400
+        : Colors.green.shade400;
 
     return Scaffold(
       appBar: AppBar(
@@ -167,7 +175,10 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
             children: [
               // Session indicator
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -181,9 +192,9 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                   ),
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // Timer circle
               ScaleTransition(
                 scale: _pulseAnimation,
@@ -225,9 +236,9 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                   ],
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // Control buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -244,7 +255,7 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                     ),
                   ),
                   const SizedBox(width: 24),
-                  
+
                   // Play/Pause button
                   IconButton.filled(
                     onPressed: _isRunning ? _pauseTimer : _startTimer,
@@ -257,7 +268,7 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                     ),
                   ),
                   const SizedBox(width: 24),
-                  
+
                   // Skip button
                   IconButton.filled(
                     onPressed: _skipSession,
@@ -271,9 +282,9 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Sessions completed
               Container(
                 padding: const EdgeInsets.all(20),
@@ -284,15 +295,38 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem('Sessions', '$_completedSessions', Icons.check_circle, Colors.green),
-                    Container(width: 1, height: 40, color: Colors.grey.shade300),
-                    _buildStatItem('Focus Time', '${_completedSessions * workDuration}m', Icons.timer, primaryColor),
-                    Container(width: 1, height: 40, color: Colors.grey.shade300),
-                    _buildStatItem('Goal', '$sessionsBeforeLongBreak', Icons.flag, Colors.blue),
+                    _buildStatItem(
+                      'Sessions',
+                      '$_completedSessions',
+                      Icons.check_circle,
+                      Colors.green,
+                    ),
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: Colors.grey.shade300,
+                    ),
+                    _buildStatItem(
+                      'Focus Time',
+                      '${_completedSessions * workDuration}m',
+                      Icons.timer,
+                      primaryColor,
+                    ),
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: Colors.grey.shade300,
+                    ),
+                    _buildStatItem(
+                      'Goal',
+                      '$sessionsBeforeLongBreak',
+                      Icons.flag,
+                      Colors.blue,
+                    ),
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 20),
             ],
           ),
@@ -301,7 +335,12 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -351,15 +390,11 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
                   setDialogState(() => tempShortBreak = value.round());
                 },
               ),
-              _buildSettingSliderInDialog(
-                'Long Break',
-                tempLongBreak,
-                10,
-                30,
-                (value) {
-                  setDialogState(() => tempLongBreak = value.round());
-                },
-              ),
+              _buildSettingSliderInDialog('Long Break', tempLongBreak, 10, 30, (
+                value,
+              ) {
+                setDialogState(() => tempLongBreak = value.round());
+              }),
               _buildSettingSliderInDialog(
                 'Sessions before long break',
                 tempSessions,
@@ -399,7 +434,13 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
     );
   }
 
-  Widget _buildSettingSliderInDialog(String label, int value, int min, int max, ValueChanged<double> onChanged) {
+  Widget _buildSettingSliderInDialog(
+    String label,
+    int value,
+    int min,
+    int max,
+    ValueChanged<double> onChanged,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -407,7 +448,10 @@ class _PomodoroPageState extends State<PomodoroPage> with TickerProviderStateMix
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label),
-            Text('$value min', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              '$value min',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         Slider(

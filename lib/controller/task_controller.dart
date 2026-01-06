@@ -21,12 +21,14 @@ class TaskController extends GetxController {
 
   List<Task> get filteredTasks {
     var filtered = tasks.toList();
-    
+
     // Filtrer par catégorie
     if (selectedCategoryId.value != null) {
-      filtered = filtered.where((t) => t.categoryId == selectedCategoryId.value).toList();
+      filtered = filtered
+          .where((t) => t.categoryId == selectedCategoryId.value)
+          .toList();
     }
-    
+
     // Filtrer par statut
     switch (filter.value) {
       case 'completed':
@@ -55,7 +57,7 @@ class TaskController extends GetxController {
   Future<void> addCategory(Category category) async {
     await db.insertCategory(category);
     await loadCategories();
-    
+
     // Track achievement
     if (Get.isRegistered<AchievementController>()) {
       AchievementController.to.onCategoryCreated(categories.length);
@@ -92,12 +94,25 @@ class TaskController extends GetxController {
     tasks.assignAll(loadedTasks);
   }
 
-  Future<void> addTask(String title, String date, String time, DateTime dateTime, {int priority = 1, int? categoryId}) async {
-    final task = Task(title: title, date: date, time: time, priority: priority, categoryId: categoryId);
+  Future<void> addTask(
+    String title,
+    String date,
+    String time,
+    DateTime dateTime, {
+    int priority = 1,
+    int? categoryId,
+  }) async {
+    final task = Task(
+      title: title,
+      date: date,
+      time: time,
+      priority: priority,
+      categoryId: categoryId,
+    );
     await db.insertTask(task);
     await NotificationService.scheduleNotification(title, dateTime);
     await loadTasks();
-    
+
     // Track achievement
     if (Get.isRegistered<AchievementController>()) {
       AchievementController.to.onTaskCreated();
@@ -113,7 +128,7 @@ class TaskController extends GetxController {
     final updated = task.copyWith(isCompleted: !task.isCompleted);
     await db.updateTask(updated);
     await loadTasks();
-    
+
     // Track achievement if task was completed
     if (updated.isCompleted && Get.isRegistered<AchievementController>()) {
       AchievementController.to.onTaskCompleted();

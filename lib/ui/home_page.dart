@@ -48,7 +48,9 @@ class _HomePageState extends State<HomePage>
   List<Task> get sortedAndFilteredTasks {
     var tasks = controller.filteredTasks.where((task) {
       if (_searchQuery.value.isEmpty) return true;
-      return task.title.toLowerCase().contains(_searchQuery.value.toLowerCase());
+      return task.title.toLowerCase().contains(
+        _searchQuery.value.toLowerCase(),
+      );
     }).toList();
 
     switch (_sortBy.value) {
@@ -56,7 +58,9 @@ class _HomePageState extends State<HomePage>
         tasks.sort((a, b) => b.priority.compareTo(a.priority));
         break;
       case 'name':
-        tasks.sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
+        tasks.sort(
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+        );
         break;
       case 'date':
       default:
@@ -97,17 +101,19 @@ class _HomePageState extends State<HomePage>
         }),
         actions: [
           // Search button
-          Obx(() => IconButton(
-            icon: Icon(_isSearching.value ? Icons.close : Icons.search),
-            tooltip: 'Search',
-            onPressed: () {
-              _isSearching.value = !_isSearching.value;
-              if (!_isSearching.value) {
-                _searchController.clear();
-                _searchQuery.value = '';
-              }
-            },
-          )),
+          Obx(
+            () => IconButton(
+              icon: Icon(_isSearching.value ? Icons.close : Icons.search),
+              tooltip: 'Search',
+              onPressed: () {
+                _isSearching.value = !_isSearching.value;
+                if (!_isSearching.value) {
+                  _searchController.clear();
+                  _searchQuery.value = '';
+                }
+              },
+            ),
+          ),
           // Sort button
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort),
@@ -118,7 +124,12 @@ class _HomePageState extends State<HomePage>
                 value: 'date',
                 child: Row(
                   children: [
-                    Icon(Icons.calendar_today, color: _sortBy.value == 'date' ? colorScheme.primary : null),
+                    Icon(
+                      Icons.calendar_today,
+                      color: _sortBy.value == 'date'
+                          ? colorScheme.primary
+                          : null,
+                    ),
                     const SizedBox(width: 8),
                     const Text('Par date'),
                   ],
@@ -128,7 +139,12 @@ class _HomePageState extends State<HomePage>
                 value: 'priority',
                 child: Row(
                   children: [
-                    Icon(Icons.flag, color: _sortBy.value == 'priority' ? colorScheme.primary : null),
+                    Icon(
+                      Icons.flag,
+                      color: _sortBy.value == 'priority'
+                          ? colorScheme.primary
+                          : null,
+                    ),
                     const SizedBox(width: 8),
                     const Text('Par priorité'),
                   ],
@@ -138,7 +154,12 @@ class _HomePageState extends State<HomePage>
                 value: 'name',
                 child: Row(
                   children: [
-                    Icon(Icons.sort_by_alpha, color: _sortBy.value == 'name' ? colorScheme.primary : null),
+                    Icon(
+                      Icons.sort_by_alpha,
+                      color: _sortBy.value == 'name'
+                          ? colorScheme.primary
+                          : null,
+                    ),
                     const SizedBox(width: 8),
                     const Text('Par nom'),
                   ],
@@ -147,11 +168,17 @@ class _HomePageState extends State<HomePage>
             ],
           ),
           // Theme toggle
-          Obx(() => IconButton(
-            icon: Icon(themeController.isDarkMode ? Icons.light_mode : Icons.dark_mode),
-            tooltip: themeController.isDarkMode ? 'Mode clair' : 'Mode sombre',
-            onPressed: () => themeController.toggleTheme(),
-          )),
+          Obx(
+            () => IconButton(
+              icon: Icon(
+                themeController.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+              ),
+              tooltip: themeController.isDarkMode
+                  ? 'Mode clair'
+                  : 'Mode sombre',
+              onPressed: () => themeController.toggleTheme(),
+            ),
+          ),
         ],
         bottom: TabBar(
           controller: _tabController,
@@ -168,10 +195,10 @@ class _HomePageState extends State<HomePage>
         children: [
           // Motivational Quote
           _buildQuoteCard(colorScheme),
-          
+
           // Category filter chips
           Obx(() => _buildCategoryChips()),
-          
+
           // Stats Card
           Obx(() => _buildStatsCard(colorScheme)),
 
@@ -201,7 +228,7 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
-  
+
   Widget _buildQuoteCard(ColorScheme colorScheme) {
     final quote = QuotesService.getDailyQuote();
     return Container(
@@ -248,7 +275,7 @@ class _HomePageState extends State<HomePage>
 
   Widget _buildDrawer(BuildContext context) {
     final achievementController = Get.find<AchievementController>();
-    
+
     return Drawer(
       child: SafeArea(
         child: Column(
@@ -265,25 +292,37 @@ class _HomePageState extends State<HomePage>
                       const Icon(Icons.check_circle, size: 48),
                       const Spacer(),
                       // Streak badge
-                      Obx(() => Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.orange),
+                      Obx(
+                        () => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.orange),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.local_fire_department,
+                                color: Colors.orange,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${achievementController.currentStreak.value}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.local_fire_department, color: Colors.orange, size: 18),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${achievementController.currentStreak.value}',
-                              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
-                            ),
-                          ],
-                        ),
-                      )),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -309,17 +348,22 @@ class _HomePageState extends State<HomePage>
             ListTile(
               leading: const Icon(Icons.emoji_events),
               title: const Text('Badges & Récompenses'),
-              trailing: Obx(() => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(12),
+              trailing: Obx(
+                () => Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${achievementController.unlockedCount}/${achievementController.totalCount}',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
                 ),
-                child: Text(
-                  '${achievementController.unlockedCount}/${achievementController.totalCount}',
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                ),
-              )),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Get.to(() => const AchievementsPage());
@@ -358,7 +402,10 @@ class _HomePageState extends State<HomePage>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('CATEGORIES', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  const Text(
+                    'CATEGORIES',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.add, size: 20),
                     onPressed: () {
@@ -370,23 +417,26 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             Expanded(
-              child: Obx(() => ListView.builder(
-                itemCount: controller.categories.length,
-                itemBuilder: (context, index) {
-                  final category = controller.categories[index];
-                  final isSelected = controller.selectedCategoryId.value == category.id;
-                  return ListTile(
-                    leading: Icon(category.iconData, color: category.color),
-                    title: Text(category.name),
-                    selected: isSelected,
-                    selectedTileColor: category.color.withOpacity(0.1),
-                    onTap: () {
-                      controller.setCategory(category.id);
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              )),
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: controller.categories.length,
+                  itemBuilder: (context, index) {
+                    final category = controller.categories[index];
+                    final isSelected =
+                        controller.selectedCategoryId.value == category.id;
+                    return ListTile(
+                      leading: Icon(category.iconData, color: category.color),
+                      title: Text(category.name),
+                      selected: isSelected,
+                      selectedTileColor: category.color.withOpacity(0.1),
+                      onTap: () {
+                        controller.setCategory(category.id);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -396,7 +446,7 @@ class _HomePageState extends State<HomePage>
 
   Widget _buildCategoryChips() {
     if (controller.categories.isEmpty) return const SizedBox.shrink();
-    
+
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -414,15 +464,21 @@ class _HomePageState extends State<HomePage>
             ),
           ),
           ...controller.categories.map((category) {
-            final isSelected = controller.selectedCategoryId.value == category.id;
+            final isSelected =
+                controller.selectedCategoryId.value == category.id;
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: FilterChip(
-                avatar: Icon(category.iconData, size: 16, color: isSelected ? Colors.white : category.color),
+                avatar: Icon(
+                  category.iconData,
+                  size: 16,
+                  color: isSelected ? Colors.white : category.color,
+                ),
                 label: Text(category.name),
                 selected: isSelected,
                 selectedColor: category.color,
-                onSelected: (_) => controller.setCategory(isSelected ? null : category.id),
+                onSelected: (_) =>
+                    controller.setCategory(isSelected ? null : category.id),
               ),
             );
           }),
@@ -617,28 +673,43 @@ class _HomePageState extends State<HomePage>
                             // Category badge
                             if (task.categoryId != null) ...[
                               const SizedBox(width: 8),
-                              Builder(builder: (context) {
-                                final category = controller.getCategoryById(task.categoryId);
-                                if (category == null) return const SizedBox.shrink();
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: category.color.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(category.iconData, size: 10, color: category.color),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        category.name,
-                                        style: TextStyle(fontSize: 10, color: category.color),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                              Builder(
+                                builder: (context) {
+                                  final category = controller.getCategoryById(
+                                    task.categoryId,
+                                  );
+                                  if (category == null)
+                                    return const SizedBox.shrink();
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: category.color.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          category.iconData,
+                                          size: 10,
+                                          color: category.color,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          category.name,
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: category.color,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ],
                         ),
@@ -754,19 +825,30 @@ class _HomePageState extends State<HomePage>
                             child: ChoiceChip(
                               label: const Text('None'),
                               selected: selectedCategoryId == null,
-                              onSelected: (_) => setModalState(() => selectedCategoryId = null),
+                              onSelected: (_) => setModalState(
+                                () => selectedCategoryId = null,
+                              ),
                             ),
                           ),
                           ...controller.categories.map((category) {
-                            final isSelected = selectedCategoryId == category.id;
+                            final isSelected =
+                                selectedCategoryId == category.id;
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: ChoiceChip(
-                                avatar: Icon(category.iconData, size: 16, color: isSelected ? Colors.white : category.color),
+                                avatar: Icon(
+                                  category.iconData,
+                                  size: 16,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : category.color,
+                                ),
                                 label: Text(category.name),
                                 selected: isSelected,
                                 selectedColor: category.color,
-                                onSelected: (_) => setModalState(() => selectedCategoryId = category.id),
+                                onSelected: (_) => setModalState(
+                                  () => selectedCategoryId = category.id,
+                                ),
                               ),
                             );
                           }),
@@ -985,19 +1067,30 @@ class _HomePageState extends State<HomePage>
                             child: ChoiceChip(
                               label: const Text('None'),
                               selected: selectedCategoryId == null,
-                              onSelected: (_) => setModalState(() => selectedCategoryId = null),
+                              onSelected: (_) => setModalState(
+                                () => selectedCategoryId = null,
+                              ),
                             ),
                           ),
                           ...controller.categories.map((category) {
-                            final isSelected = selectedCategoryId == category.id;
+                            final isSelected =
+                                selectedCategoryId == category.id;
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: ChoiceChip(
-                                avatar: Icon(category.iconData, size: 16, color: isSelected ? Colors.white : category.color),
+                                avatar: Icon(
+                                  category.iconData,
+                                  size: 16,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : category.color,
+                                ),
                                 label: Text(category.name),
                                 selected: isSelected,
                                 selectedColor: category.color,
-                                onSelected: (_) => setModalState(() => selectedCategoryId = category.id),
+                                onSelected: (_) => setModalState(
+                                  () => selectedCategoryId = category.id,
+                                ),
                               ),
                             );
                           }),

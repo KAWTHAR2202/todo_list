@@ -11,9 +11,7 @@ class SettingsPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Paramètres'),
-      ),
+      appBar: AppBar(title: const Text('Paramètres')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -23,50 +21,60 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 // Dark Mode Toggle
-                Obx(() => SwitchListTile(
-                  secondary: Icon(
-                    themeController.isDarkMode
-                        ? Icons.dark_mode
-                        : Icons.light_mode,
-                    color: colorScheme.primary,
+                Obx(
+                  () => SwitchListTile(
+                    secondary: Icon(
+                      themeController.isDarkMode
+                          ? Icons.dark_mode
+                          : Icons.light_mode,
+                      color: colorScheme.primary,
+                    ),
+                    title: const Text('Mode sombre'),
+                    subtitle: Text(
+                      themeController.isDarkMode ? 'Activé' : 'Désactivé',
+                    ),
+                    value: themeController.isDarkMode,
+                    onChanged: (value) => themeController.setDarkMode(value),
                   ),
-                  title: const Text('Mode sombre'),
-                  subtitle: Text(
-                    themeController.isDarkMode ? 'Activé' : 'Désactivé',
-                  ),
-                  value: themeController.isDarkMode,
-                  onChanged: (value) => themeController.setDarkMode(value),
-                )),
+                ),
                 const Divider(height: 1),
                 // Primary Color
                 ListTile(
                   leading: Icon(Icons.palette, color: colorScheme.primary),
                   title: const Text('Couleur principale'),
                   subtitle: const Text('Personnalisez le thème'),
-                  trailing: Obx(() => Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: themeController.primaryColor,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey.shade300, width: 2),
+                  trailing: Obx(
+                    () => Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: themeController.primaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 2,
+                        ),
+                      ),
                     ),
-                  )),
+                  ),
                   onTap: () => _showColorPicker(context, themeController),
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Notifications Section
           _buildSectionTitle(context, 'Notifications'),
           Card(
             child: Column(
               children: [
                 SwitchListTile(
-                  secondary: Icon(Icons.notifications, color: colorScheme.primary),
+                  secondary: Icon(
+                    Icons.notifications,
+                    color: colorScheme.primary,
+                  ),
                   title: const Text('Notifications de tâches'),
                   subtitle: const Text('Rappels pour les tâches'),
                   value: true,
@@ -87,9 +95,9 @@ class SettingsPage extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // About Section
           _buildSectionTitle(context, 'À propos'),
           Card(
@@ -137,35 +145,37 @@ class SettingsPage extends StatelessWidget {
           spacing: 12,
           runSpacing: 12,
           children: ThemeController.availableColors.map((color) {
-            return Obx(() => GestureDetector(
-              onTap: () {
-                controller.setPrimaryColor(color);
-                Navigator.pop(context);
-              },
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: controller.primaryColor == color
-                      ? Border.all(color: Colors.white, width: 3)
-                      : null,
-                  boxShadow: controller.primaryColor == color
-                      ? [
-                          BoxShadow(
-                            color: color.withOpacity(0.5),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ]
+            return Obx(
+              () => GestureDetector(
+                onTap: () {
+                  controller.setPrimaryColor(color);
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                    border: controller.primaryColor == color
+                        ? Border.all(color: Colors.white, width: 3)
+                        : null,
+                    boxShadow: controller.primaryColor == color
+                        ? [
+                            BoxShadow(
+                              color: color.withOpacity(0.5),
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: controller.primaryColor == color
+                      ? const Icon(Icons.check, color: Colors.white)
                       : null,
                 ),
-                child: controller.primaryColor == color
-                    ? const Icon(Icons.check, color: Colors.white)
-                    : null,
               ),
-            ));
+            );
           }).toList(),
         ),
         actions: [

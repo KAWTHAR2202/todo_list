@@ -44,8 +44,8 @@ class Achievement {
       targetValue: template.targetValue,
       currentValue: map['currentValue'] ?? 0,
       isUnlocked: map['isUnlocked'] == 1,
-      unlockedAt: map['unlockedAt'] != null 
-          ? DateTime.parse(map['unlockedAt']) 
+      unlockedAt: map['unlockedAt'] != null
+          ? DateTime.parse(map['unlockedAt'])
           : null,
     );
   }

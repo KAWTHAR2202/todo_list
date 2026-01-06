@@ -16,12 +16,7 @@ class Category {
   Color get color => Color(colorValue);
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'colorValue': colorValue,
-      'icon': icon,
-    };
+    return {'id': id, 'name': name, 'colorValue': colorValue, 'icon': icon};
   }
 
   factory Category.fromMap(Map<String, dynamic> map) {
@@ -33,12 +28,7 @@ class Category {
     );
   }
 
-  Category copyWith({
-    int? id,
-    String? name,
-    int? colorValue,
-    String? icon,
-  }) {
+  Category copyWith({int? id, String? name, int? colorValue, String? icon}) {
     return Category(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -51,7 +41,11 @@ class Category {
   static List<Category> defaultCategories = [
     Category(name: 'Personal', colorValue: Colors.blue.value, icon: 'person'),
     Category(name: 'Work', colorValue: Colors.orange.value, icon: 'work'),
-    Category(name: 'Shopping', colorValue: Colors.green.value, icon: 'shopping_cart'),
+    Category(
+      name: 'Shopping',
+      colorValue: Colors.green.value,
+      icon: 'shopping_cart',
+    ),
     Category(name: 'Health', colorValue: Colors.red.value, icon: 'favorite'),
   ];
 

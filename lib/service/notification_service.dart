@@ -8,22 +8,28 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const settings = InitializationSettings(android: androidSettings);
 
     await _notifications.initialize(settings);
 
     // Init timezone
     tzdata.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('Europe/Paris')); // Ajuste selon ton fuseau horaire
+    tz.setLocalLocation(
+      tz.getLocation('Europe/Paris'),
+    ); // Ajuste selon ton fuseau horaire
 
     // Demander la permission sur Android 13+
     await _requestPermissions();
   }
 
   static Future<void> _requestPermissions() async {
-    final androidPlugin = _notifications.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     if (androidPlugin != null) {
       await androidPlugin.requestNotificationsPermission();
       await androidPlugin.requestExactAlarmsPermission();
@@ -50,7 +56,10 @@ class NotificationService {
     );
   }
 
-  static Future<void> scheduleNotification(String title, DateTime dateTime) async {
+  static Future<void> scheduleNotification(
+    String title,
+    DateTime dateTime,
+  ) async {
     // Vérifier que la date est dans le futur
     if (dateTime.isBefore(DateTime.now())) {
       debugPrint('Cannot schedule notification in the past');
@@ -61,7 +70,7 @@ class NotificationService {
     final id = dateTime.millisecondsSinceEpoch ~/ 1000;
 
     final scheduledDate = tz.TZDateTime.from(dateTime, tz.local);
-    
+
     debugPrint('Scheduling notification for: $scheduledDate');
 
     await _notifications.zonedSchedule(

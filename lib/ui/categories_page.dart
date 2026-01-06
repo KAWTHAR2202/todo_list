@@ -12,9 +12,7 @@ class CategoriesPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('📁 Categories'),
-      ),
+      appBar: AppBar(title: const Text('📁 Categories')),
       body: Obx(() {
         if (controller.categories.isEmpty) {
           return Center(
@@ -42,7 +40,12 @@ class CategoriesPage extends StatelessWidget {
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
             final category = controller.categories[index];
-            return _buildCategoryCard(context, category, controller, colorScheme);
+            return _buildCategoryCard(
+              context,
+              category,
+              controller,
+              colorScheme,
+            );
           },
         );
       }),
@@ -54,7 +57,12 @@ class CategoriesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(BuildContext context, Category category, TaskController controller, ColorScheme colorScheme) {
+  Widget _buildCategoryCard(
+    BuildContext context,
+    Category category,
+    TaskController controller,
+    ColorScheme colorScheme,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -78,7 +86,7 @@ class CategoriesPage extends StatelessWidget {
                 child: Icon(category.iconData, color: category.color, size: 28),
               ),
               const SizedBox(width: 16),
-              
+
               // Name and task count
               Expanded(
                 child: Column(
@@ -86,7 +94,10 @@ class CategoriesPage extends StatelessWidget {
                   children: [
                     Text(
                       category.name,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     FutureBuilder<int>(
@@ -95,14 +106,17 @@ class CategoriesPage extends StatelessWidget {
                         final count = snapshot.data ?? 0;
                         return Text(
                           '$count tasks',
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 14,
+                          ),
                         );
                       },
                     ),
                   ],
                 ),
               ),
-              
+
               // Actions
               PopupMenuButton<String>(
                 onSelected: (value) {
@@ -113,12 +127,26 @@ class CategoriesPage extends StatelessWidget {
                   }
                 },
                 itemBuilder: (context) => [
-                  const PopupMenuItem(value: 'edit', child: Row(
-                    children: [Icon(Icons.edit, size: 20), SizedBox(width: 8), Text('Edit')],
-                  )),
-                  const PopupMenuItem(value: 'delete', child: Row(
-                    children: [Icon(Icons.delete, size: 20, color: Colors.red), SizedBox(width: 8), Text('Delete', style: TextStyle(color: Colors.red))],
-                  )),
+                  const PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit, size: 20),
+                        SizedBox(width: 8),
+                        Text('Edit'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, size: 20, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text('Delete', style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -149,42 +177,68 @@ class CategoriesPage extends StatelessWidget {
                     decoration: InputDecoration(
                       labelText: 'Category Name',
                       hintText: 'e.g., Work, Personal',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       prefixIcon: const Icon(Icons.label),
                     ),
                     autofocus: true,
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text('Color', style: TextStyle(fontWeight: FontWeight.w600)),
+
+                  const Text(
+                    'Color',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [
-                      Colors.blue, Colors.red, Colors.green, Colors.orange,
-                      Colors.purple, Colors.teal, Colors.pink, Colors.indigo,
-                      Colors.amber, Colors.cyan,
-                    ].map((color) {
-                      final isSelected = selectedColor == color.value;
-                      return GestureDetector(
-                        onTap: () => setDialogState(() => selectedColor = color.value),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: isSelected ? Border.all(color: Colors.black, width: 3) : null,
-                          ),
-                          child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-                        ),
-                      );
-                    }).toList(),
+                    children:
+                        [
+                          Colors.blue,
+                          Colors.red,
+                          Colors.green,
+                          Colors.orange,
+                          Colors.purple,
+                          Colors.teal,
+                          Colors.pink,
+                          Colors.indigo,
+                          Colors.amber,
+                          Colors.cyan,
+                        ].map((color) {
+                          final isSelected = selectedColor == color.value;
+                          return GestureDetector(
+                            onTap: () => setDialogState(
+                              () => selectedColor = color.value,
+                            ),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: color,
+                                shape: BoxShape.circle,
+                                border: isSelected
+                                    ? Border.all(color: Colors.black, width: 3)
+                                    : null,
+                              ),
+                              child: isSelected
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : null,
+                            ),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text('Icon', style: TextStyle(fontWeight: FontWeight.w600)),
+
+                  const Text(
+                    'Icon',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -192,16 +246,29 @@ class CategoriesPage extends StatelessWidget {
                     children: Category.iconMap.entries.map((entry) {
                       final isSelected = selectedIcon == entry.key;
                       return GestureDetector(
-                        onTap: () => setDialogState(() => selectedIcon = entry.key),
+                        onTap: () =>
+                            setDialogState(() => selectedIcon = entry.key),
                         child: Container(
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: isSelected ? Color(selectedColor).withOpacity(0.2) : Colors.grey.shade100,
+                            color: isSelected
+                                ? Color(selectedColor).withOpacity(0.2)
+                                : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(10),
-                            border: isSelected ? Border.all(color: Color(selectedColor), width: 2) : null,
+                            border: isSelected
+                                ? Border.all(
+                                    color: Color(selectedColor),
+                                    width: 2,
+                                  )
+                                : null,
                           ),
-                          child: Icon(entry.value, color: isSelected ? Color(selectedColor) : Colors.grey),
+                          child: Icon(
+                            entry.value,
+                            color: isSelected
+                                ? Color(selectedColor)
+                                : Colors.grey,
+                          ),
                         ),
                       );
                     }).toList(),
@@ -217,11 +284,13 @@ class CategoriesPage extends StatelessWidget {
               FilledButton(
                 onPressed: () async {
                   if (nameController.text.isNotEmpty) {
-                    await controller.addCategory(Category(
-                      name: nameController.text,
-                      colorValue: selectedColor,
-                      icon: selectedIcon,
-                    ));
+                    await controller.addCategory(
+                      Category(
+                        name: nameController.text,
+                        colorValue: selectedColor,
+                        icon: selectedIcon,
+                      ),
+                    );
                     Navigator.pop(context);
                   }
                 },
@@ -234,7 +303,11 @@ class CategoriesPage extends StatelessWidget {
     );
   }
 
-  void _showEditCategoryDialog(BuildContext context, Category category, TaskController controller) {
+  void _showEditCategoryDialog(
+    BuildContext context,
+    Category category,
+    TaskController controller,
+  ) {
     final nameController = TextEditingController(text: category.name);
     int selectedColor = category.colorValue;
     String selectedIcon = category.icon;
@@ -254,41 +327,67 @@ class CategoriesPage extends StatelessWidget {
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Category Name',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       prefixIcon: const Icon(Icons.label),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text('Color', style: TextStyle(fontWeight: FontWeight.w600)),
+
+                  const Text(
+                    'Color',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [
-                      Colors.blue, Colors.red, Colors.green, Colors.orange,
-                      Colors.purple, Colors.teal, Colors.pink, Colors.indigo,
-                      Colors.amber, Colors.cyan,
-                    ].map((color) {
-                      final isSelected = selectedColor == color.value;
-                      return GestureDetector(
-                        onTap: () => setDialogState(() => selectedColor = color.value),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: isSelected ? Border.all(color: Colors.black, width: 3) : null,
-                          ),
-                          child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-                        ),
-                      );
-                    }).toList(),
+                    children:
+                        [
+                          Colors.blue,
+                          Colors.red,
+                          Colors.green,
+                          Colors.orange,
+                          Colors.purple,
+                          Colors.teal,
+                          Colors.pink,
+                          Colors.indigo,
+                          Colors.amber,
+                          Colors.cyan,
+                        ].map((color) {
+                          final isSelected = selectedColor == color.value;
+                          return GestureDetector(
+                            onTap: () => setDialogState(
+                              () => selectedColor = color.value,
+                            ),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: color,
+                                shape: BoxShape.circle,
+                                border: isSelected
+                                    ? Border.all(color: Colors.black, width: 3)
+                                    : null,
+                              ),
+                              child: isSelected
+                                  ? const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : null,
+                            ),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: 20),
-                  
-                  const Text('Icon', style: TextStyle(fontWeight: FontWeight.w600)),
+
+                  const Text(
+                    'Icon',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -296,16 +395,29 @@ class CategoriesPage extends StatelessWidget {
                     children: Category.iconMap.entries.map((entry) {
                       final isSelected = selectedIcon == entry.key;
                       return GestureDetector(
-                        onTap: () => setDialogState(() => selectedIcon = entry.key),
+                        onTap: () =>
+                            setDialogState(() => selectedIcon = entry.key),
                         child: Container(
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: isSelected ? Color(selectedColor).withOpacity(0.2) : Colors.grey.shade100,
+                            color: isSelected
+                                ? Color(selectedColor).withOpacity(0.2)
+                                : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(10),
-                            border: isSelected ? Border.all(color: Color(selectedColor), width: 2) : null,
+                            border: isSelected
+                                ? Border.all(
+                                    color: Color(selectedColor),
+                                    width: 2,
+                                  )
+                                : null,
                           ),
-                          child: Icon(entry.value, color: isSelected ? Color(selectedColor) : Colors.grey),
+                          child: Icon(
+                            entry.value,
+                            color: isSelected
+                                ? Color(selectedColor)
+                                : Colors.grey,
+                          ),
                         ),
                       );
                     }).toList(),
@@ -321,11 +433,13 @@ class CategoriesPage extends StatelessWidget {
               FilledButton(
                 onPressed: () async {
                   if (nameController.text.isNotEmpty) {
-                    await controller.updateCategory(category.copyWith(
-                      name: nameController.text,
-                      colorValue: selectedColor,
-                      icon: selectedIcon,
-                    ));
+                    await controller.updateCategory(
+                      category.copyWith(
+                        name: nameController.text,
+                        colorValue: selectedColor,
+                        icon: selectedIcon,
+                      ),
+                    );
                     Navigator.pop(context);
                   }
                 },
@@ -338,12 +452,18 @@ class CategoriesPage extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, Category category, TaskController controller) {
+  void _showDeleteConfirmation(
+    BuildContext context,
+    Category category,
+    TaskController controller,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('🗑️ Delete Category'),
-        content: Text('Are you sure you want to delete "${category.name}"?\n\nTasks in this category will not be deleted, but will become uncategorized.'),
+        content: Text(
+          'Are you sure you want to delete "${category.name}"?\n\nTasks in this category will not be deleted, but will become uncategorized.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

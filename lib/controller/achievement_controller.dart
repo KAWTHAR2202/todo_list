@@ -6,7 +6,7 @@ import '../model/achievement.dart';
 
 class AchievementController extends GetxController {
   static AchievementController get to => Get.find();
-  
+
   final achievements = <Achievement>[].obs;
   final totalPoints = 0.obs;
   final currentStreak = 0.obs;
@@ -22,24 +22,24 @@ class AchievementController extends GetxController {
 
   Future<void> _loadAchievements() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Load stats
     totalTasksCompleted.value = prefs.getInt('totalTasksCompleted') ?? 0;
     totalPomodoroSessions.value = prefs.getInt('totalPomodoroSessions') ?? 0;
     currentStreak.value = prefs.getInt('currentStreak') ?? 0;
-    
+
     final lastDateStr = prefs.getString('lastCompletionDate');
     if (lastDateStr != null) {
       lastCompletionDate.value = DateTime.parse(lastDateStr);
     }
-    
+
     // Load achievements progress
     final savedAchievements = prefs.getString('achievements');
     Map<String, dynamic> savedData = {};
     if (savedAchievements != null) {
       savedData = json.decode(savedAchievements);
     }
-    
+
     achievements.value = Achievement.defaultAchievements.map((template) {
       if (savedData.containsKey(template.id)) {
         return Achievement.fromMap(savedData[template.id], template);
@@ -53,41 +53,43 @@ class AchievementController extends GetxController {
         targetValue: template.targetValue,
       );
     }).toList();
-    
+
     _calculatePoints();
   }
 
   Future<void> _saveAchievements() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     final data = <String, dynamic>{};
     for (var achievement in achievements) {
       data[achievement.id] = achievement.toMap();
     }
-    
+
     await prefs.setString('achievements', json.encode(data));
     await prefs.setInt('totalTasksCompleted', totalTasksCompleted.value);
     await prefs.setInt('totalPomodoroSessions', totalPomodoroSessions.value);
     await prefs.setInt('currentStreak', currentStreak.value);
     if (lastCompletionDate.value != null) {
-      await prefs.setString('lastCompletionDate', lastCompletionDate.value!.toIso8601String());
+      await prefs.setString(
+        'lastCompletionDate',
+        lastCompletionDate.value!.toIso8601String(),
+      );
     }
   }
 
   void _calculatePoints() {
-    totalPoints.value = achievements
-        .where((a) => a.isUnlocked)
-        .length * 100;
+    totalPoints.value = achievements.where((a) => a.isUnlocked).length * 100;
   }
 
   void _checkAndUnlock(String achievementId, int newValue) {
     final index = achievements.indexWhere((a) => a.id == achievementId);
     if (index == -1) return;
-    
+
     final achievement = achievements[index];
     achievement.currentValue = newValue;
-    
-    if (!achievement.isUnlocked && achievement.currentValue >= achievement.targetValue) {
+
+    if (!achievement.isUnlocked &&
+        achievement.currentValue >= achievement.targetValue) {
       achievement.isUnlocked = true;
       achievement.unlockedAt = DateTime.now();
       achievements[index] = achievement;
@@ -96,7 +98,7 @@ class AchievementController extends GetxController {
     } else {
       achievements[index] = achievement;
     }
-    
+
     achievements.refresh();
     _saveAchievements();
   }
@@ -121,7 +123,7 @@ class AchievementController extends GetxController {
 
   void onTaskCompleted() {
     totalTasksCompleted.value++;
-    
+
     // Check time-based achievements
     final now = DateTime.now();
     if (now.hour < 8) {
@@ -130,15 +132,15 @@ class AchievementController extends GetxController {
     if (now.hour >= 22) {
       _checkAndUnlock('night_owl', 1);
     }
-    
+
     // Update streak
     _updateStreak();
-    
+
     // Check task completion achievements
     _checkAndUnlock('task_master_10', totalTasksCompleted.value);
     _checkAndUnlock('task_master_50', totalTasksCompleted.value);
     _checkAndUnlock('task_master_100', totalTasksCompleted.value);
-    
+
     // Check streak achievements
     _checkAndUnlock('streak_3', currentStreak.value);
     _checkAndUnlock('streak_7', currentStreak.value);
@@ -148,7 +150,7 @@ class AchievementController extends GetxController {
   void _updateStreak() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    
+
     if (lastCompletionDate.value == null) {
       currentStreak.value = 1;
     } else {
@@ -157,9 +159,9 @@ class AchievementController extends GetxController {
         lastCompletionDate.value!.month,
         lastCompletionDate.value!.day,
       );
-      
+
       final difference = today.difference(lastDate).inDays;
-      
+
       if (difference == 0) {
         // Same day, streak unchanged
       } else if (difference == 1) {
@@ -170,7 +172,7 @@ class AchievementController extends GetxController {
         currentStreak.value = 1;
       }
     }
-    
+
     lastCompletionDate.value = now;
     _saveAchievements();
   }
