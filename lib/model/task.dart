@@ -5,6 +5,7 @@ class Task {
   String time;
   bool isCompleted;
   int priority; // 0: basse, 1: moyenne, 2: haute
+  int? categoryId;
 
   Task({
     this.id,
@@ -13,6 +14,7 @@ class Task {
     required this.time,
     this.isCompleted = false,
     this.priority = 1,
+    this.categoryId,
   });
 
   // Convertir Task en Map pour SQLite
@@ -24,6 +26,7 @@ class Task {
       'time': time,
       'isCompleted': isCompleted ? 1 : 0,
       'priority': priority,
+      'categoryId': categoryId,
     };
   }
 
@@ -36,6 +39,7 @@ class Task {
       time: map['time'] as String,
       isCompleted: (map['isCompleted'] as int?) == 1,
       priority: map['priority'] as int? ?? 1,
+      categoryId: map['categoryId'] as int?,
     );
   }
 
@@ -46,6 +50,7 @@ class Task {
     String? time,
     bool? isCompleted,
     int? priority,
+    Object? categoryId = const _Unset(),
   }) {
     return Task(
       id: id ?? this.id,
@@ -54,6 +59,12 @@ class Task {
       time: time ?? this.time,
       isCompleted: isCompleted ?? this.isCompleted,
       priority: priority ?? this.priority,
+      categoryId: categoryId is _Unset ? this.categoryId : categoryId as int?,
     );
   }
+}
+
+// Sentinel class for copyWith nullable values
+class _Unset {
+  const _Unset();
 }

@@ -30,6 +30,26 @@ class NotificationService {
     }
   }
 
+  // Notification instantanée (pour Pomodoro)
+  static Future<void> showInstantNotification(String title, String body) async {
+    await _notifications.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'pomodoro_channel',
+          'Pomodoro Notifications',
+          channelDescription: 'Notifications for Pomodoro timer',
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+          enableVibration: true,
+        ),
+      ),
+    );
+  }
+
   static Future<void> scheduleNotification(String title, DateTime dateTime) async {
     // Vérifier que la date est dans le futur
     if (dateTime.isBefore(DateTime.now())) {
